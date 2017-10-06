@@ -208,6 +208,38 @@ static OSStatus	MonitorInput(void						*inRefCon,
 
 #pragma mark-
 
+- (IBAction)setupOutput:(id)sender
+{
+    [self setupIOUnit];
+}
+
+- (IBAction)resetOutput:(id)sender
+{
+    [self resetIOUnit];
+}
+
+- (IBAction)setActiveYESPressed:(id)sender
+{    
+    NSLog(@"setting audio session active YES");
+    [AVAudioSession.sharedInstance setActive:YES error:nil];
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSLog(@"starting voice unit");
+        AudioOutputUnitStart(voiceUnit);
+    });
+}
+
+- (IBAction)setActiveNOPressed:(id)sender
+{
+    NSLog(@"stopping voice unit");
+    AudioOutputUnitStop(voiceUnit);
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSLog(@"setting audio session active NO");
+        [AVAudioSession.sharedInstance setActive:NO error:nil];
+    });
+}
+
 - (void)toggleFXPlayback:(BOOL)playbackOn
 {
     if (playbackOn) {
