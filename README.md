@@ -1,3 +1,35 @@
+# Purpose
+
+This is a modified project based on echoTouch code from Apple. It has been modified to include buttons to manipulate the AVAudioSession, in order to demonstrate reproducable bugs with the voice processing audio unit for iPhone 8.
+
+# Bug
+
+When using a voice processing audio unit, if an application gives up the audio session to another app (i.e. Google Hangouts phone call) or programattically ([AVAudioSession.sharedInstance setActive: NO]), the volume control buttons on the phone will stop changing the volume for the speakers audio route.
+
+# Reproduction Steps
+
+Build the echoTouch app on an iPhone 8 or iPhone 8+.
+
+1. Open app.
+2. Press "Record", and record a steady sound at unchanging volume.
+3. Press "Play"
+4. While recorded sound is playing, adjust the volume up and down.
+
+Observation:
+Volume control works fine, the volume of the recorded sound goes up and down.
+
+5. After pressing "stop", or waiting until sound finishes playing, press setActiveNO button.
+6. Wait at least two seconds
+7. Press setActiveYES again, to restart the audio unit.
+8. Press play again
+9. While sound is playing, adjust the volume up and down.
+
+Expectation:
+Volume control works fine, the volume of the sound goes up and down according to the controls.
+
+Actual:
+Volume control does not work, the displayed volume is ignored, and the audio plays at a single static level.
+
 # echoTouch
 
 echoTouch demonstrates using the Voice Processing I/O audio unit for handling audio input and output. The application tests local audio playback and simulated "far-talker" audio playback allowing you to record and listen back to the results. It also lets you to turn on/off the VPIO comparing the recorded results.
@@ -32,10 +64,6 @@ Audio Folder
 - fx.caf : Sound Effects audio file.
 - sampleVoiceXXXkHz.wav : Simulated far-talker audio files at various sample rates.
 
-## Version History
-
-Version 1.0 - Initial release.
-
 ## Requirements
 
 ### Build
@@ -46,5 +74,3 @@ Xcode 8.0, iOS 10 SDK
 
 macOS 10.11.6 or greater
 iOS 9.3 or greater
-
-Copyright (C) 2016 Apple Inc. All rights reserved.
